@@ -1,0 +1,25 @@
+CompileFlags:
+  Add: [-std=gnu++17, -I/vscode/myProgram/RRRREALL/src/core/include, -I/vscode/myProgram/RRRREALL/src/binfhe/include]
+  Remove: [-Werror]
+  CompilationDatabase: build/
+
+Index:
+  # 使用系统可用线程数的一半进行索引
+  Threads: 2
+  # 启用后台索引
+  Background: Build
+  # 存储索引数据
+  StoreWithIndex: true
+
+Diagnostics:
+  # 保留未使用头文件的检查
+  UnusedIncludes: Strict
+  # 保留缺失头文件的检查
+  MissingIncludes: Strict
+  # 仅抑制特定的警告，保留基础警告
+  Suppress: ["-Winconsistent-missing-override", "-Woverloaded-virtual", "-Wvirtual-move-assign", "-Wnon-virtual-dtor", "-Wsuggest-override"]
+  # 设置为警告级别，显示所有诊断信息
+  Level: Warning
+
+Style:
+  FormatBasedOnStyle: file

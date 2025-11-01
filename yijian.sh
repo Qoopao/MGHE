@@ -1,0 +1,8 @@
+mkdir build
+cd build
+cmake -DWITH_NTL=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=1 .. 
+make 
+
+
+# 开启gdb的调试模式 -DCMAKE_BUILD_TYPE=Debug
+# 开启ASAN内存分析 -DWITH_ASAN=ON
