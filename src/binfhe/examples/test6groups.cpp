@@ -26,11 +26,11 @@ int main() {
     // Sample Program: Step 1: Set CryptoContext，注意，大参数下有几率自举失败，原因未知，可能时hybrid product噪声上溢？或者说Q不够大，导致自举后的密文噪声>q/16
     
     auto cc = BinFHEContext();
-    cc.GenerateBinFHEContext(L110T_8, XZDDF);
+    cc.GenerateBinFHEContext(L100T_8, XZDDF);
 
     //组数以及组内人数
     int k = 6;
-    int ki = 3;
+    int ki = 1;
     //注意要先生成这个目录，否则会出问题
     cc.inituser(k, ki);
 

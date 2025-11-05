@@ -1,6 +1,6 @@
-mkdir build
+mkdir -p build
 cd build
-cmake -DWITH_NTL=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=1 .. 
+cmake -DWITH_NTL=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DBUILD_STATIC=ON -DBUILD_SHARED=OFF .. 
 make 
 
 

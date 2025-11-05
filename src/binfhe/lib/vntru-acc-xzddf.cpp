@@ -812,6 +812,62 @@ VectorNTRUACCKey VectorNTRUAccumulatorXZDDF::MGKeyGenAcc_new(BinFHEContext &cc,
     for (auto i = 0; i < intq - 1; ++i) {
         (*ek)[0][1][i] = MGKeyGenAuto_new(cc, F_shares, F_inv_shares, (2 * N / intq) * (i + 1) + 1, groupidx, numofparties, secretSharing);
     }
+
+
+
+    // // ===================================== 计算 ek 的大小 =====================================
+    // // 1. 基础参数整理
+    // size_t ek_main_groups = 1;                  // 主分组数量（固定为1）
+    // size_t ek_sub_groups = 2;                   // 子分组数量（固定为2）
+    // size_t ek_max_degree = q-1;         // 每个子分组的名义元素数（max(q-1, n+1)）
+    // size_t poly_byte_size = 0;                  // 单个 NativePoly 的内存大小（取第一个有效多项式计算，假设所有多项式结构相同）
+    
+    // // 计算单个 NativePoly 的内存大小（以第1个有效多项式为例）
+    // if (ek) {
+    //     size_t poly_len = params->GetN();  // 多项式长度（项数）
+    //     size_t coeff_byte = sizeof(NativeInteger);  // 每个系数的字节数
+    //     poly_byte_size = poly_len * coeff_byte;     // 多项式总字节数（仅系数，不含其他成员）
+    // }
+
+    // // 2. 计算 名义内存占用（包括未使用的元素）
+    // size_t total_nominal_elements = ek_main_groups * ek_sub_groups * ek_max_degree;  // 总名义元素数
+    // size_t total_nominal_memory = total_nominal_elements * poly_byte_size;           // 总名义内存（字节）
+
+    // // 3. 计算 实际有效数据大小（仅被赋值的元素）
+    // size_t valid_elements_sub0 = n + 1;         // 第1子分组（[0][0]）有效元素数：0~n → 共n+1个
+    // size_t valid_elements_sub1 = intq - 1;      // 第2子分组（[0][1]）有效元素数：0~intq-2 → 共intq-1个
+    // size_t total_valid_elements = valid_elements_sub0 + valid_elements_sub1;         // 总有效元素数
+    // size_t total_valid_memory = total_valid_elements * poly_byte_size;               // 总有效内存（字节）
+
+    // // 4. 计算 未使用的部分（名义 - 有效）
+    // size_t unused_elements = total_nominal_elements - total_valid_elements;          // 未使用的元素数
+    // size_t unused_memory = total_nominal_memory - total_valid_memory;                // 未使用的内存（字节）
+
+    // // 5. 打印结果（单位转换：B→KB→MB，方便阅读）
+    // auto to_kb = [](size_t bytes) { return static_cast<double>(bytes) / 1024; };
+    // auto to_mb = [](size_t bytes) { return static_cast<double>(bytes) / (1024 * 1024); };
+
+    // std::cout << "\n===================================== ek 大小统计 =====================================" << std::endl;
+    // std::cout << "基础参数：" << std::endl;
+    // std::cout << "  - 主分组数：" << ek_main_groups << "，子分组数：" << ek_sub_groups << std::endl;
+    // std::cout << "  - 每个子分组名义元素数（max_degree）：" << ek_max_degree << "（q-1=" << q-1 << ", n+1=" << n+1 << "）" << std::endl;
+    // std::cout << "  - 单个 NativePoly 内存大小：" << poly_byte_size << " B = " << to_kb(poly_byte_size) << " KB" << std::endl;
+    // std::cout << "\n名义总大小（含未使用元素）：" << std::endl;
+    // std::cout << "  - 元素总数：" << total_nominal_elements << std::endl;
+    // std::cout << "  - 内存占用：" << total_nominal_memory << " B = " << to_kb(total_nominal_memory) << " KB = " << to_mb(total_nominal_memory) << " MB" << std::endl;
+    // std::cout << "\n实际有效大小（仅赋值元素）：" << std::endl;
+    // std::cout << "  - 第1子分组（[0][0]）有效元素数：" << valid_elements_sub0 << "（0~" << n << "）" << std::endl;
+    // std::cout << "  - 第2子分组（[0][1]）有效元素数：" << valid_elements_sub1 << "（0~" << intq-2 << "）" << std::endl;
+    // std::cout << "  - 有效元素总数：" << total_valid_elements << std::endl;
+    // std::cout << "  - 有效内存占用：" << total_valid_memory << " B = " << to_kb(total_valid_memory) << " KB = " << to_mb(total_valid_memory) << " MB" << std::endl;
+    // std::cout << "\n未使用部分（可优化空间）：" << std::endl;
+    // std::cout << "  - 未使用元素数：" << unused_elements << "（占比：" << (unused_elements * 100.0 / total_nominal_elements) << "%）" << std::endl;
+    // std::cout << "  - 未使用内存：" << unused_memory << " B = " << to_kb(unused_memory) << " KB = " << to_mb(unused_memory) << " MB（占比：" << (unused_memory * 100.0 / total_nominal_memory) << "%）" << std::endl;
+    // std::cout << "=========================================================================================" << std::endl;
+    // // =========================================================================================
+
+
+
     return ek;
 
 }

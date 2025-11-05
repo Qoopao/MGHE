@@ -156,9 +156,13 @@ enum BINFHE_PARAMSET {
     P192G,              // more than 192 bits of security for classical computer attacks -
                         // optimize runtime by finding a non-power-of-two n (using Gaussian secrets)
     BIGP,       		//for mG test
-    L110T_2,            //supporting up to 2 groups, 110 bits of security
-    L110T_4,            //supporting up to 4 groups, 110 bits of security
-    L110T_8,            //supporting up to 8 groups, 110 bits of security
+    L100T_2,            //supporting up to 2 groups, 100 bits of security
+    L100T_4,            //supporting up to 4 groups, 100 bits of security
+    L100T_8,            //supporting up to 8 groups, 100 bits of security
+
+    L128T_2,            //supporting up to 2 groups, 128 bits of security
+    L128T_4,            //supporting up to 4 groups, 128 bits of security
+    L128T_8,            //supporting up to 8 groups, 128 bits of security
 };
 std::ostream& operator<<(std::ostream& s, BINFHE_PARAMSET f);
 

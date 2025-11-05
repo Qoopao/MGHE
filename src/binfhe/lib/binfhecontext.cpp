@@ -141,11 +141,16 @@ void BinFHEContext::GenerateBinFHEContext(BINFHE_PARAMSET set, BINFHE_METHOD met
         //               numberBits|cyclOrder|latticeParam|  mod|   modKS|  stdDev| baseKS| gadgetBase| baseRK| numAutoKeys| keyDist
         { P192T,             { 26,     4096,        1024, 1024, 1 << 17, STD_NTRU,    28,    1 <<  9,  32,    10,  UNIFORM_TERNARY} },
         { P192G,             { 26,     4096,         805, 1024, 1 << 17, STD_NTRU,    28,    1 <<  9,  32,    10,  GAUSSIAN       } },
-        //                     Q,   cyclOrder,       n,    q,    Q_ks,               B_ks,    B
+        //                               Q,                 cyclOrder,                  n,             q,    q_ks,   std_dev,  B_ks,    B
         { BIGP,              { 60,     4096,        16, 2048, 1 << 18, STD_NTRU,   32,    1 <<  10,  32,    10,  UNIFORM_TERNARY} },
-        { L110T_2,           { 50,     8192,        800,  2048, 1 << 18, STD_NTRU,   32,    1 <<  7,  32,    10,  UNIFORM_TERNARY} },
-        { L110T_4,           { 60,     8192,        800,  2048, 1 << 18, STD_NTRU,   32,    1 <<  8,  32,    10,  UNIFORM_TERNARY} },
-        { L110T_8,           { 70,     8192,        1024, 4096, 1 << 18, STD_NTRU,   32,    1 <<  9,  32,    10,  UNIFORM_TERNARY} },
+        
+        { L100T_2,           { 50,     8192,        600,  4096, 1 << 30, STD_NTRU,   1024,    1 <<  5,  32,    10,  UNIFORM_TERNARY} },
+        { L100T_4,           { 50,     8192,        600,  4096, 1 << 30, STD_NTRU,   1024,    1 <<  5,  32,    10,  UNIFORM_TERNARY} },
+        { L100T_8,           { 50,     8192,        600, 4096, 1 << 30, STD_NTRU,   1024,    1 <<  4,  32,    10,  UNIFORM_TERNARY} },
+
+        { L128T_2,           { 60,     16384,        600,  4096, 1 << 30, STD_NTRU,   1024,    1 <<  9,  32,    10,  UNIFORM_TERNARY} },
+        { L128T_4,           { 60,     16384,        600,  4096, 1 << 30, STD_NTRU,   1024,    1 <<  9,  32,    10,  UNIFORM_TERNARY} },
+        { L128T_8,           { 60,     16384,        600, 4096, 1 << 30, STD_NTRU,   1024,    1 <<  8,  32,    10,  UNIFORM_TERNARY} },
     });//BIGP,              { 50,     1024,         512, 1024, 1 << 13, STD_NTRU,   28,    1 <<  9,  32,    10,  }
     // clang-format on
 

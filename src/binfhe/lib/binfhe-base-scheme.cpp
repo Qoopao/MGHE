@@ -267,10 +267,12 @@ void BinFHEScheme::GroupEVKGen(BinFHEContext &cc,
     cout<<"    Start Group EVK Generation..."<<endl;
 
     //Step1: 对于每个组读取各方的LWE私钥并相加得到各组的联合LWE私钥jsk
+    #pragma omp parallel for schedule(dynamic)
     for (int groupIdx = 0; groupIdx < numofgroups; ++groupIdx) {
         std::string group_dir = "/vscode/myProgram/RRRREALL/src/binfhe/user/group_" + std::to_string(groupIdx);
         if (!fs::exists(group_dir)) {
-            break;  // 如果组目录不存在，则跳过
+            cerr<<"Error: Group directory "<<group_dir<<" does not exist."<<endl;
+            continue;  // 如果组目录不存在，则跳过
         }
         
         //Step3: 调用MGKeyGenAcc_new生成GroupEVK
@@ -365,11 +367,13 @@ void BinFHEScheme::GroupHPKGen(const std::shared_ptr<BinFHECryptoParams>& params
         std::cerr << "Warning: rlweCRP文件不存在于路径" << crp_path << std::endl;
     }
 
+    #pragma omp parallel for schedule(dynamic)
     for (int groupIdx = 0; groupIdx < maxGroups; groupIdx++) {
         // 检查组目录是否存在
         std::string groupDir = "/vscode/myProgram/RRRREALL/src/binfhe/user/group_" + std::to_string(groupIdx);
         if (!fs::exists(groupDir)) {
-            break; // 结束HPK生成，因为组序号是递增的，不存在还有后续组的情况
+            cerr<<"Error: Group directory "<<groupDir<<" does not exist."<<endl;
+            continue; // 结束HPK生成，因为组序号是递增的，不存在还有后续组的情况
         }
         
         // 创建HPK结构：HPK={I_0,I_1,I_2, H}
@@ -548,13 +552,14 @@ void BinFHEScheme::GroupLWEKSKGen(const std::shared_ptr<BinFHECryptoParams>& par
     }
     
     // 遍历所有组
+    #pragma omp parallel for schedule(dynamic)
     for (int groupIdx = 0; groupIdx < numofgroups; ++groupIdx) {
         std::string group_dir = "/vscode/myProgram/RRRREALL/src/binfhe/user/group_" +
         std::to_string(groupIdx);
         // 检查组目录是否存在
         if (!fs::exists(group_dir)) {
             cerr << "Error: 组目录不存在 " << group_dir << endl;
-            break;  // 如果组目录不存在，则退出
+            continue;  // 如果组目录不存在，则退出
         }
     
         // Step1: 生成N个随机的矩阵A ∈ Z_{qKS}^{d×n}
@@ -941,77 +946,6 @@ LWECiphertext BinFHEScheme::MGEvalBinGate(const std::shared_ptr<BinFHECryptoPara
     LWECiphertext newct2=std::make_shared<LWECiphertextImpl>(LWECiphertextImpl(std::move(newa2), ct2->GetB().Mod(q)));
     newct1->SetModulus(q);
     newct2->SetModulus(q);
-
-// {    
-//     // 添加解密逻辑，对newct1和newct2进行解密
-//     LWEPlaintext result1 = 0, result2 = 0;
-
-//     vector<vector<LWEPrivateKey>> sk111(numofgroups, vector<LWEPrivateKey>(2));
-
-//     for (int groupIdx = 0; groupIdx < 10; ++groupIdx) {
-//         std::string group_dir = "/vscode/myProgram/RRRREALL/src/binfhe/user/group_" + std::to_string(groupIdx);
-//         if (!fs::exists(group_dir)) {
-//             continue;  // 如果组目录不存在，则跳过
-//         }
-        
-//         // 初始化联合私钥jsk
-//         LWEPrivateKey jsk = nullptr;
-//         bool first_sk = true;
-        
-//         // 读取该组中所有party的私钥
-//         for (int partyIdx = 0; partyIdx < 4; ++partyIdx) {
-//             std::string party_sk_path = group_dir + "/party_" + std::to_string(partyIdx) + "/sk";
-//             if (!fs::exists(party_sk_path)) {
-//                 continue;  // 如果party私钥文件不存在，则跳过
-//             }
-            
-//             // 从文件读取LWE私钥
-//             std::ifstream sk_ifs(party_sk_path);
-//             if (!sk_ifs.is_open()) {
-//                 continue;
-//             }
-            
-//             // 读取私钥向量值
-//             std::vector<std::string> values;
-//             std::string val_str;
-//             while (sk_ifs >> val_str) {
-//                 values.push_back(val_str);
-//             }
-//             sk_ifs.close();
-            
-//             if (values.empty()) {
-//                 continue;
-//             }
-            
-//             // 创建LWE私钥
-//             LWEPrivateKey sk = std::make_shared<LWEPrivateKeyImpl>();
-//             NativeVector sk_vec(values.size(), NativeInteger(q));
-//             for (size_t i = 0; i < values.size(); ++i) {
-//                 sk_vec[i] = NativeInteger(values[i]);
-//             }
-            
-//             // 设置私钥向量（使用const_cast来绕过const限制）
-//             LWEPrivateKeyImpl* sk_impl = const_cast<LWEPrivateKeyImpl*>(sk.get());
-//             sk_impl->~LWEPrivateKeyImpl(); // 析构旧对象
-//             new (sk_impl) LWEPrivateKeyImpl(sk_vec); // 放置新对象
-            
-//             // 将当前party的私钥添加到联合私钥jsk中
-//             sk111[groupIdx][partyIdx] = sk;
-
-//         }
-        
-
-//     }
-//     // 对newct1和newct2进行解密
-//     LWEscheme->MGHE_Decrypt(params->GetLWEParams(), sk111, newct1, &result1, numofgroups);
-//     LWEscheme->MGHE_Decrypt(params->GetLWEParams(), sk111, newct2, &result2, numofgroups);
-   
-//     // 可选：输出解密结果
-//     std::cout << "Decrypted result for newct1: " << result1 << std::endl;
-//     std::cout << "Decrypted result for newct2: " << result2 << std::endl;
-
-
-// } 
 
 
 
@@ -2000,14 +1934,38 @@ std::vector<NativePoly> BinFHEScheme::MGBootstrapGateCore_new(const std::shared_
     auto acc = std::make_shared<NTRUCiphertextImpl>(std::move(polym));
 
     //使用numofgroups而不是ct->groupidxs.size()来初始化accV的大小
+    auto gpow = params->GetVectorNTRUParams()->GetGPower();
+    auto digitsG = params->GetVectorNTRUParams()->GetDigitsG();
     std::vector<std::vector<NTRUCiphertext>> accV(numofgroups, std::vector<NTRUCiphertext>(params->GetVectorNTRUParams()->GetDigitsG()));
-    #pragma omp parallel for schedule(dynamic)
-    for (size_t i = 0; i < numofgroups; ++i) {
-        for(size_t j=0;j<params->GetVectorNTRUParams()->GetDigitsG();++j){
-            //获得X^{as}的密文
-            accV[i][j]=sub_MGBootstrapGateCore_new(params, NAND, ct, EK_ALL, i, params->GetVectorNTRUParams()->GetGPower()[j]);
-        }
-    }
+    
+    // 核心优化：
+    // 1. 任务级并行：每个(i,j)独立任务，并行度=numofgroups*digitsG
+    // 2. 显式线程数：绑定物理核心，减少缓存迁移
+    // 3. 变量作用域：明确shared/private，避免OpenMP自动判断开销
+    // 4. 取消不必要特性：cancel(none)减少线程管理开销
+//    #pragma omp parallel num_threads(omp_get_max_threads()) \
+        proc_bind(spread) \
+        shared(params, ct, EK_ALL, accV, gpow, digitsG)
+//    {
+        // 单个线程生成任务，其他线程并行执行（避免多线程重复生成任务）
+//        #pragma omp single nowait
+//        {
+            for (size_t i = 0; i < static_cast<size_t>(numofgroups); ++i) {  // numofgroups转size_t避免类型转换
+                for (size_t j = 0; j < digitsG; ++j) {
+                    // 每个(i,j)作为独立任务，firstprivate确保i/j私有拷贝
+                    // depend(out:accV[i][j]) 显式声明输出依赖，避免数据竞争（OpenMP 5.0+支持）
+                    //#pragma omp task firstprivate(i, j)
+                    //{
+                        // 调用子函数，所有参数均为只读或独立输出，无数据竞争
+                        accV[i][j] = sub_MGBootstrapGateCore_new(
+                            params, NAND, ct, EK_ALL, static_cast<int>(i), gpow[j]
+                        );
+                    //}
+                }
+            }
+ //       }
+ //   } 
+    
 
 
     //将acc变成一个MGRLWE密文

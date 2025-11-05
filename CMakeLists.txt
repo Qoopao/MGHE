@@ -81,8 +81,8 @@ option( USE_MACPORTS "Use MacPorts installed packages"                          
 
 # Set required number of bits for native integer in build by setting NATIVE_SIZE to 64 or 128
 if( NOT NATIVE_SIZE )
-    # set( NATIVE_SIZE 64 ) @tag{lyh}
-    set( NATIVE_SIZE 128)
+    set( NATIVE_SIZE 64 ) #@tag{lyh}
+    #set( NATIVE_SIZE 128)
 endif()
 
 if( NOT CKKS_M_FACTOR )
@@ -317,22 +317,22 @@ endif()
 # Backend logic
 #--------------------------------------------------------------------
 if( NOT MATHBACKEND)
-    #set( MATHBACKEND 4 ) @tag{lyh}
-    set( MATHBACKEND 6 )
+     set( MATHBACKEND 4 ) #@tag{lyh}
+    #set( MATHBACKEND 6 )
 endif()
 
 message (STATUS "MATHBACKEND is set to " ${MATHBACKEND})
 
-#if( "${NATIVEINT}" EQUAL 128 ) @tag{lyh}
-#    if( "${MATHBACKEND}" EQUAL 6 )
-#        set (WITH_NTL OFF)
-#        set (MATHBACKEND 4)
-#        message (STATUS "MATHBACKEND 6 is not compatible with 128-bit native backend. Setting MATHBACKEND to 4.")
-#    elseif( WITH_NTL )
-#        set (WITH_NTL OFF)
-#        message (STATUS "MATHBACKEND 6 is not compatible with 128-bit native backend. Setting WITH_NTL to OFF.")
-#    endif()
-#endif()
+if( "${NATIVEINT}" EQUAL 128 ) #@tag{lyh}
+    if( "${MATHBACKEND}" EQUAL 6 )
+        set (WITH_NTL OFF)
+        set (MATHBACKEND 4)
+        message (STATUS "MATHBACKEND 6 is not compatible with 128-bit native backend. Setting MATHBACKEND to 4.")
+    elseif( WITH_NTL )
+        set (WITH_NTL OFF)
+        message (STATUS "MATHBACKEND 6 is not compatible with 128-bit native backend. Setting WITH_NTL to OFF.")
+    endif()
+endif()
 
 if( "${MATHBACKEND}" EQUAL 2 )
     if( NOT WITH_BE2 )
