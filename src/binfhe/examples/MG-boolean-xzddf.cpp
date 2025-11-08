@@ -23,7 +23,7 @@ namespace fs = std::filesystem;
 std::vector<std::vector<std::vector<NativePoly>>> TriplesGen();
 
 int main() {
-    // Sample Program: Step 1: Set CryptoContext，注意，大参数下有几率自举失败，原因未知，可能时hybrid product噪声上溢？或者说Q不够大，导致自举后的密文噪声>q/16
+    // Sample
     
     auto cc = BinFHEContext();
     cc.GenerateBinFHEContext(BIGP, XZDDF);
