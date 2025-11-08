@@ -37,6 +37,8 @@ public:
      * @param numofparties 参与方数量
      * @param n 私钥长度
      */
+
+    //根据论文内容，这里只能串行：先把所有参与方的私钥读进来，然后按论文的伪代码把生成过程放到同一个循环里面
     EnrollShares(BinFHEContext& cc, int groupid, int numofparties, uint32_t n) {
         F_shares.resize(numofparties);
         F_inv_shares.resize(numofparties);
